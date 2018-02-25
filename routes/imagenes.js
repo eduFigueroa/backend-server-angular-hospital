@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var fs = require('fs');
 // inicializar variables
 var app = express();
+var path = require('path');
 
 
 app.get('/:tipo/:img', (req, res, next) => {
@@ -12,15 +13,20 @@ app.get('/:tipo/:img', (req, res, next) => {
     var tipo = req.params.tipo;
     var img = req.params.img;
 
-    var path = `./uploads/${tipo}/${img}`;
+    var pathFile = `./uploads/${tipo}/${img}`;
 
-    fs.exists(path, existe => {
+    if (!fs.existsSync(pathFile)) {
+        pathFile = './assets/no-img.jpg';
+    }
+    res.sendFile(path.resolve(pathFile));
 
-        if (!existe) { // sino existe la imagen se mandara una por defecto
-            path = './assets/no-img.jpg';
-        }
-        res.sendfile(path);
-    });
+    // fs.exists(path, existe => {
+
+    //     if (!existe) { sino existe la imagen se mandara una por defecto
+    //         path = './assets/no-img.jpg';
+    //     }
+    //     res.sendFile(path.resolve(pathFile));
+    // });
 
     // res.status(200).json({
     //     ok: true,
